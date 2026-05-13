@@ -1,0 +1,13 @@
+{
+  "name": "neet-tutor",
+  "version": "1.0.0",
+  "description": "AI study tutor for NEET 2026 aspirants",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}

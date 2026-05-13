@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEET 2026 Study Tutor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: #FAFAF7; color: #2C2C2A; line-height: 1.5; min-height: 100vh; }
+.container { max-width: 720px; margin: 0 auto; padding: 20px 16px 40px; }
+
+.hero { background: linear-gradient(135deg, #EEEDFE 0%, #E1F5EE 100%); border-radius: 20px; padding: 28px 24px; margin-bottom: 24px; }
+.hero-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.hero-title { font-size: 26px; font-weight: 600; margin-bottom: 6px; line-height: 1.2; color: #26215C; }
+.hero-sub { font-size: 14px; color: #534AB7; line-height: 1.5; }
+.hero-tag { font-size: 11px; color: #534AB7; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; font-weight: 500; }
+.days-box { text-align: right; }
+.days-label { font-size: 11px; color: #534AB7; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.days-num { font-size: 48px; font-weight: 600; color: #26215C; line-height: 1; }
+
+.tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 20px; }
+.tab { background: white; border: 1px solid #E5E5E0; border-radius: 10px; padding: 11px 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; color: #2C2C2A; font-family: inherit; }
+.tab:hover { border-color: #B4B2A9; transform: translateY(-1px); }
+.tab.active { background: #2C2C2A; color: white; border-color: #2C2C2A; }
+.tab i { font-size: 15px; vertical-align: -2px; margin-right: 3px; }
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.chat-card { background: white; border: 1px solid #E5E5E0; border-radius: 14px; padding: 16px; min-height: 360px; max-height: 520px; overflow-y: auto; margin-bottom: 12px; }
+.msg { display: flex; gap: 10px; margin-bottom: 16px; }
+.msg.user { flex-direction: row-reverse; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 16px; }
+.msg.bot .avatar { background: #EEEDFE; color: #534AB7; }
+.msg.user .avatar { background: #F1EFE8; color: #2C2C2A; }
+.bubble { padding: 11px 14px; border-radius: 14px; max-width: 78%; font-size: 14px; line-height: 1.55; white-space: pre-wrap; word-wrap: break-word; }
+.msg.bot .bubble { background: #F5F5F0; border-bottom-left-radius: 4px; }
+.msg.user .bubble { background: #EEEDFE; color: #26215C; border-bottom-right-radius: 4px; }
+.bubble strong { font-weight: 600; }
+.bubble code { background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 4px; font-size: 13px; font-family: ui-monospace, monospace; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.chip { background: white; border: 1px solid #E5E5E0; border-radius: 20px; padding: 7px 13px; font-size: 12px; color: #2C2C2A; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.chip:hover { background: #F5F5F0; border-color: #B4B2A9; transform: translateY(-1px); }
+
+.input-row { display: flex; gap: 8px; align-items: flex-end; margin-bottom: 24px; }
+#user-input { flex: 1; resize: none; padding: 11px 14px; font-size: 14px; font-family: inherit; border: 1px solid #D3D1C7; border-radius: 12px; background: white; color: #2C2C2A; line-height: 1.4; min-height: 44px; max-height: 120px; }
+#user-input:focus { outline: none; border-color: #534AB7; box-shadow: 0 0 0 3px rgba(83, 74, 183, 0.1); }
+.send-btn { padding: 11px 16px; background: #2C2C2A; color: white; border: none; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 500; height: 44px; display: flex; align-items: center; gap: 5px; font-family: inherit; transition: all 0.2s; }
+.send-btn:hover { background: #444441; }
+.send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.tools-label { font-size: 11px; color: #5F5E5A; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 10px; font-weight: 500; }
+.tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.tool-btn { background: white; border: 1px solid #E5E5E0; border-radius: 12px; padding: 13px 14px; cursor: pointer; transition: all 0.2s; text-align: left; font-family: inherit; display: flex; gap: 10px; align-items: flex-start; }
+.tool-btn:hover { border-color: #B4B2A9; transform: translateY(-1px); }
+.tool-btn i { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.tool-name { font-size: 13px; font-weight: 500; color: #2C2C2A; margin-bottom: 2px; }
+.tool-desc { font-size: 11px; color: #5F5E5A; }
+
+.day-pill { display: flex; align-items: center; gap: 12px; padding: 13px 14px; background: white; border: 1px solid #E5E5E0; border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
+.day-pill:hover { border-color: #B4B2A9; transform: translateX(2px); }
+.day-pill.done { background: #EAF3DE; border-color: #C0DD97; }
+.day-pill.done .day-num-circle { background: #639922; color: white; }
+.day-num-circle { width: 32px; height: 32px; border-radius: 50%; background: #F1EFE8; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 500; flex-shrink: 0; color: #2C2C2A; }
+.day-info { flex: 1; min-width: 0; }
+.day-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.day-focus { font-size: 12px; color: #5F5E5A; }
+.day-tag { font-size: 11px; padding: 2px 8px; border-radius: 6px; font-weight: 500; margin-left: 6px; display: inline-block; }
+.tag-bio { background: #EAF3DE; color: #173404; }
+.tag-phy { background: #E6F1FB; color: #042C53; }
+.tag-chem { background: #FAEEDA; color: #412402; }
+.tag-mock { background: #EEEDFE; color: #26215C; }
+.tag-rest { background: #F1EFE8; color: #2C2C2A; }
+
+.day-detail { background: white; border: 1px solid #E5E5E0; border-radius: 14px; padding: 18px; margin-top: 8px; display: none; }
+.day-detail.open { display: block; }
+.task-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 8px; margin-bottom: 4px; transition: all 0.15s; cursor: pointer; }
+.task-item:hover { background: #FAFAF7; }
+.task-item.checked { background: #EAF3DE; }
+.task-item.checked .task-text { text-decoration: line-through; color: #5F5E5A; }
+.task-checkbox { width: 18px; height: 18px; border-radius: 4px; border: 1.5px solid #B4B2A9; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; background: white; }
+.task-item.checked .task-checkbox { background: #639922; border-color: #639922; color: white; }
+.task-text { font-size: 13px; line-height: 1.5; flex: 1; }
+
+.affirm-card { background: white; border: 1px solid #E5E5E0; border-radius: 14px; padding: 20px; margin-bottom: 12px; }
+.affirm-icon { font-size: 28px; color: #BA7517; margin-bottom: 12px; display: block; }
+.affirm-title { font-size: 17px; font-weight: 500; margin-bottom: 10px; line-height: 1.4; }
+.affirm-body { font-size: 14px; color: #5F5E5A; line-height: 1.6; }
+.boost-grid { display: grid; gap: 8px; }
+.boost-btn { background: white; border: 1px solid #E5E5E0; border-radius: 10px; padding: 12px 14px; text-align: left; cursor: pointer; font-family: inherit; transition: all 0.15s; display: flex; align-items: center; gap: 10px; font-size: 14px; color: #2C2C2A; }
+.boost-btn:hover { background: #F5F5F0; border-color: #B4B2A9; }
+.boost-btn i { font-size: 16px; }
+
+.typing-dots { display: inline-flex; gap: 3px; align-items: center; padding: 4px 0; }
+.typing-dots span { width: 6px; height: 6px; background: #B4B2A9; border-radius: 50%; animation: bounce 1.4s infinite; }
+.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-4px); opacity: 1; } }
+
+.section-title { font-size: 15px; font-weight: 500; margin: 16px 0 10px; }
+.footer-note { text-align: center; font-size: 12px; color: #888780; margin-top: 24px; padding: 16px; }
+
+@media (max-width: 540px) {
+  .hero { padding: 20px 18px; }
+  .hero-title { font-size: 22px; }
+  .days-num { font-size: 36px; }
+  .tabs { gap: 4px; }
+  .tab { font-size: 12px; padding: 10px 4px; }
+  .tools-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="hero">
+    <div class="hero-row">
+      <div style="flex:1; min-width: 200px;">
+        <div class="hero-tag">Your NEET 2026 companion</div>
+        <h1 class="hero-title">Hey, let's prep.</h1>
+        <p class="hero-sub">Ask doubts, get explanations, practice MCQs. Built for you, available 24/7.</p>
+      </div>
+      <div class="days-box">
+        <div class="days-label">Days to NEET</div>
+        <div class="days-num" id="days-left">12</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="chat"><i class="ti ti-message-circle"></i>Tutor</button>
+    <button class="tab" data-tab="plan"><i class="ti ti-calendar"></i>Plan</button>
+    <button class="tab" data-tab="quiz"><i class="ti ti-bolt"></i>Quiz</button>
+    <button class="tab" data-tab="boost"><i class="ti ti-heart"></i>Boost</button>
+  </div>
+
+  <div id="panel-chat" class="panel active">
+    <div class="chat-card" id="chat-area">
+      <div class="msg bot">
+        <div class="avatar"><i class="ti ti-sparkles"></i></div>
+        <div class="bubble">Hey! I'm your NEET prep tutor. Ask me anything from your NCERT — Physics formulas, Biology concepts, Chemistry reactions, or say <strong>"test me on Genetics"</strong> for instant MCQs.
+
+Try a quick-start below, or type your own question.</div>
+      </div>
+    </div>
+
+    <div class="chips">
+      <button class="chip" data-q="Give me 5 NEET MCQs on Photoelectric effect with full solutions">Photoelectric MCQs</button>
+      <button class="chip" data-q="Explain Mendel's dihybrid cross with a simple example, like I'm a beginner">Dihybrid cross</button>
+      <button class="chip" data-q="Give me a one-page formula sheet for Modern Physics covering Photoelectric, Bohr model, and Nuclei">Modern Physics formulas</button>
+      <button class="chip" data-q="Build me a complete reaction map for Aldehydes and Ketones — Cannizzaro, aldol, Tollens, Fehling, haloform">Aldehyde reactions</button>
+      <button class="chip" data-q="Test me with 10 mixed NEET MCQs across Physics, Chemistry, Biology. One at a time. Give answer after I respond.">Quick 10-Q quiz</button>
+      <button class="chip" data-q="Explain Meselson-Stahl experiment in 4 lines plus 1 NEET-style MCQ on it">Meselson-Stahl quick</button>
+    </div>
+
+    <div class="input-row">
+      <textarea id="user-input" placeholder="Type your question... e.g. 'Explain SN1 vs SN2' or 'Quiz me on Genetics'" rows="1"></textarea>
+      <button class="send-btn" id="send-btn" onclick="sendMsg()"><i class="ti ti-send"></i>Ask</button>
+    </div>
+
+    <div class="tools-label">Quick study tools</div>
+    <div class="tools-grid">
+      <button class="tool-btn" onclick="askPreset('practice')">
+        <i class="ti ti-bolt" style="color:#BA7517;"></i>
+        <div><div class="tool-name">Practice session</div><div class="tool-desc">10 MCQs on your topic</div></div>
+      </button>
+      <button class="tool-btn" onclick="askPreset('explain')">
+        <i class="ti ti-bulb" style="color:#1D9E75;"></i>
+        <div><div class="tool-name">Concept explainer</div><div class="tool-desc">Anything you're stuck on</div></div>
+      </button>
+      <button class="tool-btn" onclick="askPreset('summary')">
+        <i class="ti ti-notebook" style="color:#534AB7;"></i>
+        <div><div class="tool-name">Chapter summary</div><div class="tool-desc">NCERT chapter in 5 min</div></div>
+      </button>
+      <button class="tool-btn" onclick="askPreset('mnemonic')">
+        <i class="ti ti-brain" style="color:#D85A30;"></i>
+        <div><div class="tool-name">Mnemonic maker</div><div class="tool-desc">Memory tricks for lists</div></div>
+      </button>
+    </div>
+  </div>
+
+  <div id="panel-plan" class="panel">
+    <p style="font-size: 14px; color: #5F5E5A; margin-bottom: 14px;">Tap a day to see and check off its tasks.</p>
+    <div id="plan-list"></div>
+  </div>
+
+  <div id="panel-quiz" class="panel">
+    <div id="quiz-area"></div>
+  </div>
+
+  <div id="panel-boost" class="panel">
+    <div id="boost-area"></div>
+  </div>
+
+  <div class="footer-note">Built with care for NEET aspirants · Powered by Claude</div>
+</div>
+
+<script>
+const DAYS_TO_NEET = 12;
+document.getElementById('days-left').textContent = DAYS_TO_NEET;
+
+const plan = [
+  { day: 1, theme: "Diagnose and reset", focus: "Find your real gaps", tag: "phy", tasks: ["Take a 60-min Physics diagnostic — know which chapters hurt most", "List your 5 weakest Physics chapters honestly", "Biology NCERT: Reproduction in Flowering Plants (Ch-1) + diagrams", "Chemistry GOC: inductive, resonance, hyperconjugation — 30 MCQs", "Start your Physics formula notebook"] },
+  { day: 2, theme: "Physics: Mechanics", focus: "Kinematics + Laws of Motion", tag: "phy", tasks: ["Kinematics: 1D motion + projectile — 25 problems", "Laws of Motion + Friction — 20 numericals", "Biology: Human Reproduction Ch-2 + spermatogenesis diagram", "Chemistry: Haloalkanes — SN1/SN2 + reactions", "Evening recap: redo 5 mistakes from today's Physics"] },
+  { day: 3, theme: "Physics: Energy + Rotation", focus: "High-frequency chapters", tag: "phy", tasks: ["Work-Energy-Power: conservation laws + 20 problems", "Rotational Motion: moment of inertia + rolling", "Biology: Principles of Inheritance (Ch-4) + Mendel practice", "Chemistry: Alcohols, Phenols, Ethers — acidity + reactions", "30-min recall test on Day 1-3 Physics"] },
+  { day: 4, theme: "Physics: Electricity sprint", focus: "Highest-yield zone", tag: "phy", tasks: ["Current Electricity: Kirchhoff + Wheatstone — 25 problems", "Capacitance + series/parallel combinations", "Biology: Molecular Basis of Inheritance (Ch-5) — full chapter", "Chemistry: Aldehydes & Ketones — Cannizzaro, aldol, Tollens", "Update formula notebook with electricity formulas"] },
+  { day: 5, theme: "Mock test day", focus: "Honest check-in", tag: "mock", tasks: ["Full mock test — 3hr 20min, real exam timing, no breaks", "30-min break — eat, walk, breathe", "Analyze every Physics mistake — growth zone", "Mark 5 topics for re-revision tomorrow", "Sleep early — tomorrow is heavy"] },
+  { day: 6, theme: "Recovery + Modern Physics", focus: "Easy formula-based wins", tag: "phy", tasks: ["Re-revise the 5 Physics topics from yesterday's mistakes", "Modern Physics: Photoelectric + Bohr + Nuclei — all formulas", "Biology: Biotechnology Principles + Applications (Ch-9,10)", "Chemistry: Coordination Compounds — IUPAC + hybridization", "30 MCQ Physics test — mixed"] },
+  { day: 7, theme: "Biology power day", focus: "Your anchor subject", tag: "bio", tasks: ["Plant Physiology: Photosynthesis (C3/C4) + Respiration", "Animal Kingdom + Plant Kingdom — classification tables", "Ecology + Biodiversity full revision (Ch-13,14,15)", "Physics: Optics (Ray + Wave) — lens formulas + YDSE", "Chemistry: p-Block trends (Groups 15-18)"] },
+  { day: 8, theme: "Mock test day", focus: "Track the climb", tag: "mock", tasks: ["Full mock test #2 — notice the difference from mock #1", "Compare with mock #1 — what grew?", "Physics-only analysis: where did you climb?", "Light Biology revision — no new topics", "Acknowledge the climb, however small"] },
+  { day: 9, theme: "Physics: Thermal + Waves", focus: "Forgotten goldmines", tag: "phy", tasks: ["Thermodynamics + Kinetic Theory: first law, Cp-Cv, rms speed", "Oscillations + Waves: SHM, doppler, beats — 20 problems", "Biology: Human Health & Disease + Microbes in Welfare", "Chemistry: Solutions + Electrochemistry numericals", "Physics formula notebook full re-read"] },
+  { day: 10, theme: "Inorganic + Plant Phys", focus: "NCERT recall day", tag: "chem", tasks: ["d & f Block: lanthanide contraction + oxidation states", "Chemical Bonding: hybridization, MOT, dipole moment", "Biology: Evolution + Reproductive Health full revision", "Physics: Magnetic Effects + EMI + AC (15 Qs)", "90 MCQ Biology-only test"] },
+  { day: 11, theme: "Mock test day", focus: "Dress rehearsal", tag: "mock", tasks: ["Full mock #3 in exam-day clothes, real timing", "1 hr analysis — what to fix in 24 hrs?", "Re-read your Physics formula notebook", "Pack admit card, ID, stationery, water bottle", "Sleep at 9 PM"] },
+  { day: 12, theme: "Calm prep", focus: "Trust the work", tag: "rest", tasks: ["Morning: NCERT Biology speed skim (Classification + Ecology)", "Afternoon: formula sheets — read only", "No new topics. No tough problems. No online comparison.", "30-min walk + light meal + early dinner", "Sleep by 10 PM — you've done the work"] }
+];
+
+const affirmations = [
+  { icon: "ti-flame", title: "Where you are today isn't where you'll be in 12 days.", body: "The brain doesn't learn in straight lines. You'll feel slow for 8 days, then things click. Your only job is to keep showing up until that click happens." },
+  { icon: "ti-target", title: "You don't need to be a topper. You need to be your best self for 12 days.", body: "The student who climbs hard for 12 days wins more than the one who plateaus. You have room to grow. That's leverage, not weakness." },
+  { icon: "ti-bolt", title: "Physics feels hard because nobody taught you the pattern.", body: "NEET Physics is 70% formula recognition. Use NCERT examples + PYQs — the patterns reveal themselves once you stop avoiding them." },
+  { icon: "ti-moon", title: "Sleep isn't a luxury. It's part of the syllabus.", body: "Your brain consolidates everything during sleep. Skipping sleep to study more is the worst trade you can make. 7+ hours, every night." },
+  { icon: "ti-heart-handshake", title: "You're not behind. You're in a comeback story.", body: "Every doctor you'll work with had a moment of doubt during prep. The difference is they kept going. That's literally all that separates them." }
+];
+
+let state = { currentDay: 1, completed: {}, messages: [] };
+try { const saved = localStorage.getItem('neet-tutor'); if (saved) state = { ...state, ...JSON.parse(saved) }; } catch(e) {}
+function save() { try { localStorage.setItem('neet-tutor', JSON.stringify({ currentDay: state.currentDay, completed: state.completed })); } catch(e) {} }
+
+function isDayDone(d) {
+  const tasks = state.completed[d] || [];
+  const planTasks = plan.find(p => p.day === d).tasks;
+  return tasks.length === planTasks.length && tasks.every(Boolean);
+}
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    const which = tab.dataset.tab;
+    document.getElementById('panel-' + which).classList.add('active');
+    if (which === 'plan') renderPlan();
+    if (which === 'quiz') renderQuiz();
+    if (which === 'boost') renderBoost();
+  });
+});
+
+function renderPlan() {
+  document.getElementById('plan-list').innerHTML = plan.map(d => {
+    const done = isDayDone(d.day);
+    const tagName = { bio: 'Biology', phy: 'Physics', chem: 'Chemistry', mock: 'Mock test', rest: 'Rest day' }[d.tag];
+    if (!state.completed[d.day]) state.completed[d.day] = new Array(d.tasks.length).fill(false);
+    return `
+      <div class="day-pill ${done ? 'done' : ''}" onclick="toggleDay(${d.day})">
+        <div class="day-num-circle">${done ? '<i class="ti ti-check"></i>' : d.day}</div>
+        <div class="day-info">
+          <div class="day-title">Day ${d.day} · ${d.theme}<span class="day-tag tag-${d.tag}">${tagName}</span></div>
+          <div class="day-focus">${d.focus}</div>
+        </div>
+        <i class="ti ti-chevron-down" style="font-size: 18px; color: #B4B2A9;"></i>
+      </div>
+      <div class="day-detail" id="detail-${d.day}">
+        ${d.tasks.map((t, i) => `
+          <div class="task-item ${state.completed[d.day][i] ? 'checked' : ''}" onclick="event.stopPropagation(); toggleTask(${d.day}, ${i})">
+            <div class="task-checkbox">${state.completed[d.day][i] ? '<i class="ti ti-check" style="font-size:14px;"></i>' : ''}</div>
+            <p class="task-text">${t}</p>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleDay(d) {
+  document.querySelectorAll('.day-detail').forEach(el => { if (el.id !== `detail-${d}`) el.classList.remove('open'); });
+  document.getElementById(`detail-${d}`).classList.toggle('open');
+}
+
+function toggleTask(day, i) {
+  if (!state.completed[day]) state.completed[day] = new Array(plan.find(p => p.day === day).tasks.length).fill(false);
+  state.completed[day][i] = !state.completed[day][i];
+  save(); renderPlan();
+  document.getElementById(`detail-${day}`).classList.add('open');
+}
+
+function renderBoost() {
+  const a = affirmations[new Date().getDate() % affirmations.length];
+  document.getElementById('boost-area').innerHTML = `
+    <div class="affirm-card">
+      <i class="ti ${a.icon} affirm-icon"></i>
+      <div class="affirm-title">${a.title}</div>
+      <div class="affirm-body">${a.body}</div>
+    </div>
+    <div class="section-title">When the climb feels too steep</div>
+    <div class="boost-grid">
+      <button class="boost-btn" onclick="askChat('I am feeling overwhelmed about NEET. Help me reset mentally in 3 minutes — calm and grounded, not toxic positivity.')"><i class="ti ti-wind"></i>I am feeling overwhelmed</button>
+      <button class="boost-btn" onclick="askChat('I have been studying for hours and my brain is fried. Give me a 10-minute recovery routine that actually works.')"><i class="ti ti-battery-2"></i>I am burnt out, need a reset</button>
+      <button class="boost-btn" onclick="askChat('I just did badly on a mock and feel defeated. Help me reframe and bounce back without losing today.')"><i class="ti ti-mood-sad"></i>I did badly on a mock</button>
+      <button class="boost-btn" onclick="askChat('Tell me a true short story of a NEET aspirant who struggled and cleared in re-attempt. Keep it real and grounded.')"><i class="ti ti-flame"></i>I need a comeback story</button>
+    </div>
+    <div class="affirm-card" style="margin-top: 16px;">
+      <div style="font-size: 13px; font-weight: 500; margin-bottom: 6px;"><i class="ti ti-quote" style="font-size:16px; vertical-align:-2px; margin-right:4px;"></i>The non-negotiable list</div>
+      <div style="font-size: 13px; color: #5F5E5A; line-height: 1.7;">Sleep 7+ hrs. Drink water. Eat real meals. Walk 15 min daily. Call one person you love. These aren't optional — they're the foundation that lets studying actually work.</div>
+    </div>
+  `;
+}
+
+const quizPool = [
+  { q: "Which event is NOT associated with ovulation?", opts: ["LH surge", "Decrease in oestrogen", "Full development of Graafian follicle", "Release of secondary oocyte"], ans: 1, exp: "Oestrogen rises before ovulation triggering LH surge.", subj: "Biology" },
+  { q: "Meselson-Stahl experiment proved DNA replication is:", opts: ["Conservative", "Dispersive", "Semiconservative", "Bidirectional"], ans: 2, exp: "Heavy-light hybrid DNA in gen 1 confirmed semiconservative model.", subj: "Biology" },
+  { q: "EcoRI recognizes the sequence:", opts: ["GGATCC", "GAATTC", "AAGCTT", "CTGCAG"], ans: 1, exp: "EcoRI cuts between G and A in GAATTC.", subj: "Biology" },
+  { q: "Wire of resistance R stretched to double length. New resistance:", opts: ["R", "2R", "4R", "R/4"], ans: 2, exp: "R proportional to L squared at constant volume.", subj: "Physics" },
+  { q: "Bohr radius is a. Radius of He+ in 2nd orbit:", opts: ["a", "2a", "4a", "a/2"], ans: 1, exp: "r = a × n²/Z = a × 4/2.", subj: "Physics" },
+  { q: "Half-life is 10 days. Fraction remaining after 30 days:", opts: ["1/2", "1/4", "1/8", "1/16"], ans: 2, exp: "After 3 half-lives: 1/8 remains.", subj: "Physics" },
+  { q: "Tollens' reagent gives silver mirror with:", opts: ["Acetone", "Acetaldehyde", "Benzophenone", "All three"], ans: 1, exp: "Only aldehydes reduce Tollens' reagent.", subj: "Chemistry" },
+  { q: "Hybridization of square-planar [Ni(CN)4]²⁻:", opts: ["sp3", "dsp2", "sp3d", "d2sp3"], ans: 1, exp: "Square planar with strong-field CN⁻, diamagnetic.", subj: "Chemistry" },
+  { q: "Van't Hoff factor of K4[Fe(CN)6]:", opts: ["2", "3", "4", "5"], ans: 3, exp: "4 K+ ions plus 1 complex anion = 5 particles.", subj: "Chemistry" },
+  { q: "Biodiversity hotspots in India:", opts: ["2", "3", "4", "5"], ans: 2, exp: "Himalaya, Western Ghats, Indo-Burma, Sundaland.", subj: "Biology" },
+  { q: "Cannizzaro reaction is given by:", opts: ["HCHO", "CH3CHO", "C6H5COCH3", "C2H5CHO"], ans: 0, exp: "Aldehydes without alpha-H undergo Cannizzaro.", subj: "Chemistry" },
+  { q: "Pyramid of energy is always:", opts: ["Inverted", "Upright", "Spindle-shaped", "Variable"], ans: 1, exp: "Energy decreases at each trophic level (10% law).", subj: "Biology" }
+];
+
+let quizState = { active: false, idx: 0, score: 0, qs: [], ans: [] };
+
+function renderQuiz() {
+  const area = document.getElementById('quiz-area');
+  if (!quizState.active) {
+    area.innerHTML = `
+      <div style="text-align: center; padding: 30px 20px; background: white; border: 1px solid #E5E5E0; border-radius: 14px;">
+        <i class="ti ti-bolt" style="font-size: 40px; color: #BA7517;"></i>
+        <p style="font-size: 18px; font-weight: 500; margin: 12px 0 6px;">Quick power quiz</p>
+        <p style="font-size: 13px; color: #5F5E5A; margin: 0 0 20px;">8 mixed NEET MCQs. NEET scoring: +4 correct, -1 wrong.</p>
+        <button class="send-btn" onclick="startQuiz()" style="padding: 12px 24px; margin: 0 auto;"><i class="ti ti-player-play"></i>Start quiz</button>
+      </div>
+    `;
+    return;
+  }
+  const q = quizState.qs[quizState.idx];
+  const tagCls = q.subj === 'Biology' ? 'tag-bio' : q.subj === 'Physics' ? 'tag-phy' : 'tag-chem';
+  area.innerHTML = `
+    <div style="background: white; border: 1px solid #E5E5E0; border-radius: 14px; padding: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span class="day-tag ${tagCls}" style="margin: 0;">${q.subj}</span>
+        <p style="font-size: 13px; color: #5F5E5A; margin: 0;">Q ${quizState.idx + 1} of ${quizState.qs.length} · Score ${quizState.score}</p>
+      </div>
+      <div style="background: #F1EFE8; height: 5px; border-radius: 3px; margin-bottom: 16px; overflow: hidden;"><div style="background: #1D9E75; height: 100%; width: ${Math.round(quizState.idx / quizState.qs.length * 100)}%; transition: width 0.4s;"></div></div>
+      <p style="font-size: 15px; margin: 0 0 14px; line-height: 1.5;">${q.q}</p>
+      <div id="quiz-opts">
+        ${q.opts.map((o, i) => `<button class="opt-btn" data-i="${i}" onclick="answerQuiz(${i})" style="display:block; width:100%; text-align:left; padding:11px 14px; margin:6px 0; background:white; border:1px solid #D3D1C7; border-radius:10px; cursor:pointer; font-size:14px; font-family:inherit; transition:all 0.2s;">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+      </div>
+      <div id="quiz-exp" style="display:none; margin-top:12px; padding:12px; background:#F5F5F0; border-radius:10px; font-size:13px; line-height:1.6;"></div>
+      <div id="quiz-next" style="display:none; margin-top:14px;"><button class="send-btn" onclick="nextQuiz()" id="next-q-btn">Next →</button></div>
+    </div>
+  `;
+}
+
+function startQuiz() {
+  quizState = { active: true, idx: 0, score: 0, qs: [...quizPool].sort(() => Math.random() - 0.5).slice(0, 8), ans: [] };
+  renderQuiz();
+}
+
+function answerQuiz(i) {
+  const q = quizState.qs[quizState.idx];
+  document.querySelectorAll('.opt-btn').forEach(b => {
+    b.disabled = true;
+    b.style.cursor = 'default';
+    if (parseInt(b.dataset.i) === q.ans) { b.style.background = '#EAF3DE'; b.style.borderColor = '#639922'; b.style.color = '#173404'; }
+    if (parseInt(b.dataset.i) === i && i !== q.ans) { b.style.background = '#FCEBEB'; b.style.borderColor = '#E24B4A'; b.style.color = '#501313'; }
+  });
+  if (i === q.ans) quizState.score += 4; else quizState.score -= 1;
+  quizState.ans.push(i === q.ans);
+  const exp = document.getElementById('quiz-exp');
+  exp.style.display = 'block';
+  exp.innerHTML = `<strong>${i === q.ans ? 'Correct.' : 'Not quite.'}</strong> ${q.exp}`;
+  document.getElementById('quiz-next').style.display = 'block';
+  if (quizState.idx === quizState.qs.length - 1) document.getElementById('next-q-btn').textContent = 'See results →';
+}
+
+function nextQuiz() {
+  if (quizState.idx === quizState.qs.length - 1) { finishQuiz(); return; }
+  quizState.idx++; renderQuiz();
+}
+
+function finishQuiz() {
+  const correct = quizState.ans.filter(Boolean).length;
+  const pct = Math.round(correct / quizState.qs.length * 100);
+  const msg = pct >= 75 ? "Excellent. Exam-ready territory." : pct >= 50 ? "Solid effort. A few more rounds, you'll be there." : "You showed up. That's step one. Tomorrow's quiz will be better.";
+  document.getElementById('quiz-area').innerHTML = `
+    <div style="background: white; border: 1px solid #E5E5E0; border-radius: 14px; padding: 24px; text-align: center;">
+      <p style="font-size: 12px; color: #5F5E5A; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">Quiz complete</p>
+      <p style="font-size: 56px; font-weight: 600; line-height: 1; margin-bottom: 4px;">${pct}%</p>
+      <p style="font-size: 14px; color: #5F5E5A; margin-bottom: 20px;">${correct} of ${quizState.qs.length} correct · Score ${quizState.score}</p>
+      <div style="background: #F5F5F0; border-radius: 10px; padding: 14px; margin-bottom: 16px; font-size: 14px;">${msg}</div>
+      <button class="send-btn" onclick="startQuiz()" style="margin: 0 auto;">Another round</button>
+    </div>
+  `;
+  quizState.active = false;
+}
+
+const chatArea = document.getElementById('chat-area');
+const userInput = document.getElementById('user-input');
+const sendBtn = document.getElementById('send-btn');
+
+function escapeHtml(text) { const d = document.createElement('div'); d.textContent = text; return d.innerHTML; }
+
+function formatBotText(text) {
+  let html = escapeHtml(text);
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  return html;
+}
+
+function addMessage(text, type) {
+  const msg = document.createElement('div');
+  msg.className = 'msg ' + type;
+  const icon = type === 'bot' ? 'ti-sparkles' : 'ti-user';
+  msg.innerHTML = `<div class="avatar"><i class="ti ${icon}"></i></div><div class="bubble">${type === 'bot' ? formatBotText(text) : escapeHtml(text)}</div>`;
+  chatArea.appendChild(msg);
+  chatArea.scrollTop = chatArea.scrollHeight;
+  return msg;
+}
+
+function showTyping() {
+  const msg = document.createElement('div');
+  msg.className = 'msg bot';
+  msg.id = 'typing-indicator';
+  msg.innerHTML = `<div class="avatar"><i class="ti ti-sparkles"></i></div><div class="bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>`;
+  chatArea.appendChild(msg);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+async function sendMsg(text) {
+  const q = text || userInput.value.trim();
+  if (!q) return;
+  addMessage(q, 'user');
+  userInput.value = '';
+  userInput.style.height = 'auto';
+  sendBtn.disabled = true;
+  showTyping();
+  state.messages.push({ role: 'user', content: q });
+  if (state.messages.length > 20) state.messages = state.messages.slice(-20);
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages: state.messages })
+    });
+    if (!response.ok) throw new Error('Server error: ' + response.status);
+    const data = await response.json();
+    document.getElementById('typing-indicator')?.remove();
+    addMessage(data.reply, 'bot');
+    state.messages.push({ role: 'assistant', content: data.reply });
+  } catch (err) {
+    document.getElementById('typing-indicator')?.remove();
+    addMessage("Sorry, I couldn't connect. Check your internet and try again, or ask your teacher to verify the API setup.", 'bot');
+    console.error(err);
+  } finally {
+    sendBtn.disabled = false;
+  }
+}
+
+function askChat(q) {
+  document.querySelector('.tab[data-tab="chat"]').click();
+  sendMsg(q);
+}
+
+document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => sendMsg(c.dataset.q)));
+userInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } });
+userInput.addEventListener('input', () => { userInput.style.height = 'auto'; userInput.style.height = Math.min(userInput.scrollHeight, 120) + 'px'; });
+
+function askPreset(kind) {
+  const prompts = {
+    practice: 'Start a practice session. First ask which topic and difficulty (easy/medium/tough), then give 10 NEET-style MCQs one at a time. After each, give the answer with a 1-line explanation. Keep it conversational.',
+    explain: 'Be my NEET concept tutor. Ask what topic I am stuck on, then explain it in plain English with one NEET-style example MCQ at the end. Use NCERT language.',
+    summary: 'Ask which NCERT chapter I want summarised, then give a 5-minute revision: (1) key concepts, (2) must-remember formulas/facts, (3) 3 NEET high-yield points, (4) one tricky pitfall.',
+    mnemonic: 'Ask what list or facts I need to memorise. Then create a custom mnemonic that works, explain how to use it, and test me with one recall question.'
+  };
+  sendMsg(prompts[kind]);
+}
+
+renderPlan();
+</script>
+</body>
+</html>
